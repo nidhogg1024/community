@@ -2,6 +2,7 @@ package com.nidhogg.community.dao;
 
 import com.nidhogg.community.entity.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserMapper {
@@ -14,7 +15,7 @@ public interface UserMapper {
 
     int insertUser(User user);
 
-    int updateStatus(int id, int status);
+    int updateStatus(@Param("id") int id, @Param("status") int status);
 
     int updateHeader(int id, String headerUrl);
 
