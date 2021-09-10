@@ -1,9 +1,7 @@
 package com.nidhogg.community.controller;
 
-import com.nidhogg.community.entity.Comment;
-import com.nidhogg.community.entity.DiscussPost;
-import com.nidhogg.community.entity.Page;
-import com.nidhogg.community.entity.User;
+import com.nidhogg.community.entity.*;
+import com.nidhogg.community.event.EventProducer;
 import com.nidhogg.community.service.CommentService;
 import com.nidhogg.community.service.DiscussPostService;
 import com.nidhogg.community.service.LikeService;
@@ -11,7 +9,9 @@ import com.nidhogg.community.service.UserService;
 import com.nidhogg.community.util.CommunityConstant;
 import com.nidhogg.community.util.CommunityUtil;
 import com.nidhogg.community.util.HostHolder;
+import com.nidhogg.community.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +39,13 @@ public class DiscussPostController implements CommunityConstant {
 
     @Autowired
     private LikeService likeService;
+
+    @Autowired
+    private EventProducer eventProducer;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
 
     //发布帖子
     @RequestMapping(path = "/add", method = RequestMethod.POST)
@@ -142,6 +149,38 @@ public class DiscussPostController implements CommunityConstant {
         model.addAttribute("comments", commentVoList);
 
         return "/site/discuss-detail";
+    }
+
+    // 置顶
+    @RequestMapping(path = "/top", method = RequestMethod.POST)
+    @ResponseBody
+    public String setTop(int id) {
+        discussPostService.updateType(id, 1);
+
+        return CommunityUtil.getJSONString(0);
+    }
+
+    // 加精
+    @RequestMapping(path = "/wonderful", method = RequestMethod.POST)
+    @ResponseBody
+    public String setWonderful(int id) {
+        discussPostService.updateStatus(id, 1);
+
+        // 计算帖子分数
+        System.out.println("开始计算");
+        String redisKey = RedisKeyUtil.getPostScoreKey();
+        redisTemplate.opsForSet().add(redisKey, id);
+        System.out.println("计算完毕");
+        return CommunityUtil.getJSONString(0);
+    }
+
+    // 删除
+    @RequestMapping(path = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public String setDelete(int id) {
+        discussPostService.updateStatus(id, 2);
+
+        return CommunityUtil.getJSONString(0);
     }
 
 }

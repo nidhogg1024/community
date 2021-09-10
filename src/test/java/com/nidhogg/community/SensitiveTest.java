@@ -20,7 +20,7 @@ public class SensitiveTest {
 
     @Test
     public void test(){
-        String text="操你妈";
+        String text="操";
         String filter = sensitiveFilter.filter(text);
         System.out.println(filter);
     }

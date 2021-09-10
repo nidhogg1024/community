@@ -6,6 +6,7 @@ import com.nidhogg.community.dao.UserMapper;
 import com.nidhogg.community.entity.DiscussPost;
 import com.nidhogg.community.entity.LoginTicket;
 import com.nidhogg.community.entity.User;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class MapperTests {
     private LoginTicketMapper loginTicketMapper;
     @Test
     public void testSelectPosts() {
-        List<DiscussPost> list = discussPostMapper.selectDiscussPosts(149, 0, 10);
+        List<DiscussPost> list = discussPostMapper.selectDiscussPosts(149, 0, 10,0);
         for(DiscussPost post : list) {
             System.out.println(post);
         }
