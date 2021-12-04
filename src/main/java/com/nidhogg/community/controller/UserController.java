@@ -82,7 +82,7 @@ public class UserController implements CommunityConstant {
         model.addAttribute("uploadToken", uploadToken);
         model.addAttribute("fileName", fileName);
 
-        return "/site/setting";
+        return "site/setting";
     }
     // 更新头像路径
     @RequestMapping(path = "/header/url", method = RequestMethod.POST)
@@ -103,14 +103,14 @@ public class UserController implements CommunityConstant {
     public String uploadHeader(MultipartFile headerImage, Model model) {
         if (headerImage == null) {
             model.addAttribute("error", "您还没有选择图片!");
-            return "/site/setting";
+            return "site/setting";
         }
 
         String fileName = headerImage.getOriginalFilename();
         String suffix = fileName.substring(fileName.lastIndexOf("."));
         if (StringUtils.isBlank(suffix)) {
             model.addAttribute("error", "文件的格式不正确!");
-            return "/site/setting";
+            return "site/setting";
         }
 
         // 生成随机文件名
@@ -162,7 +162,7 @@ public class UserController implements CommunityConstant {
     public String updatePassword(String oldPassword, String newPassword,String confirmPassword,Model model){
         if(oldPassword==null||newPassword==null||confirmPassword==null){
             model.addAttribute("error2", "密码为空！");
-            return "/site/setting";
+            return "site/setting";
         }
         User user = hostHolder.getUser();
         String password = CommunityUtil.md5(oldPassword + user.getSalt());
@@ -170,15 +170,15 @@ public class UserController implements CommunityConstant {
         System.out.println(user.getPassword());
         if(!user.getPassword().equals(password)){
             model.addAttribute("error2", "密码错误!");
-            return "/site/setting";
+            return "site/setting";
         }
         if(newPassword.length()<8){
             model.addAttribute("error3","密码长度小于8位！");
-            return "/site/setting";
+            return "site/setting";
         }
         if(!confirmPassword.equals(newPassword)){
             model.addAttribute("error4","两次输入的密码不一致！");
-            return "/site/setting";
+            return "site/setting";
         }
         String md5NewPassword= CommunityUtil.md5(newPassword + user.getSalt());
         userService.updatePassword(user.getId(),md5NewPassword);
@@ -213,6 +213,6 @@ public class UserController implements CommunityConstant {
 
         model.addAttribute("hasFollowed", hasFollowed);
 
-        return "/site/profile";
+        return "site/profile";
     }
 }

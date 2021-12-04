@@ -89,7 +89,7 @@ public class FollowController implements CommunityConstant {
         }
         model.addAttribute("users", userList);
 
-        return "/site/followee";
+        return "site/followee";
     }
 
     //粉丝列表
